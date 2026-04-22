@@ -1,0 +1,98 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# LaTeX / Tectonic Build Artifacts
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Compiled output
+*.pdf
+!src/**/*.pdf
+*.dvi
+*.ps
+*.xdv
+
+# Build directories
+build/
+out/
+
+# LaTeX auxiliary files
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.fmt
+*.log
+*.nav
+*.out
+*.snm
+*.synctex
+*.synctex.gz
+*.toc
+*.vrb
+*.idx
+*.ind
+*.ilg
+*.glo
+*.gls
+*.lot
+*.lof
+*.alg
+*.acr
+*.acn
+*.glg
+*.ist
+*.run.xml
+*.bcf
+
+# Tectonic-specific
+*.fmt
+
+# ─────────────────────────────────────────────────────────────────────────────
+# OS & Editor Files
+# ─────────────────────────────────────────────────────────────────────────────
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.nfs*
+
+# Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+*.bak
+*.tmp
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Python / Jupyter (if any scripts are added later)
+# ─────────────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.ipynb_checkpoints/
+*.ipynb
+.env
+.venv
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Data & Large Files
+# ─────────────────────────────────────────────────────────────────────────────
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z

@@ -1,0 +1,240 @@
+% !TEX program = xelatex % (can also use "lualatex")
+\documentclass[10pt]{article}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[a4paper, top=3cm, bottom=2.49cm, left=1.78cm, right=1.78cm]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{array, booktabs}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{mdframed}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{parskip}
+\usepackage{setspace}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{times}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{makecell}
+\usepackage{tcolorbox}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tabularray}
+\everymath{\displaystyle}
+\usepackage{pdfpages}
+\usepackage{cite}
+\usepackage{hyperref}
+
+% ─── Colors ───────────────────────────────────────────────────────────────────
+\definecolor{citecolor}   {RGB}{0,  112, 192}
+\definecolor{povteal}     {RGB}{32, 168, 179}
+\definecolor{superscript} {RGB}{0,   91,  93}
+
+% ─── Hyperref Setup ───────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  citecolor  = citecolor,
+  linkcolor  = black,
+  urlcolor   = povteal,
+  pdfborder  = {0 0 0},
+  breaklinks = true
+}
+
+% ─── Khmer Text Support (XeLaTeX / LuaLaTeX) ─────────────────────────────────
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+
+% ─── Section / Subsection Formatting ─────────────────────────────────────────
+\titleformat{\section}
+{\normalfont\bfseries\normalsize}
+{\thesection.}{0.5em}{\MakeUppercase}
+
+\titleformat{\subsection}
+{\normalfont\normalsize}
+{\thesubsection}{0.5em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\itshape\normalsize}
+{\thesubsubsection}{0.5em}{}
+
+\titlespacing*{\section}      {0pt}{7pt}{3pt}
+\titlespacing*{\subsection}   {0pt}{5pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{4pt}{2pt}
+
+% ─── Caption Formatting ───────────────────────────────────────────────────────
+\captionsetup{
+  font          = small,
+  labelfont     = bf,
+  labelsep      = period,
+  justification = centering
+}
+
+% ─── Abstract Box ─────────────────────────────────────────────────────────────
+\newmdenv[
+  linewidth        = 0.4pt,
+  linecolor        = povteal,
+  backgroundcolor  = gray!10,
+  innerleftmargin  = 7pt,
+  innerrightmargin = 7pt,
+  innertopmargin   = 6pt,
+  innerbottommargin= 6pt,
+  skipabove        = 5pt,
+  skipbelow        = 5pt,
+  leftline         = false,
+  rightline        = false
+]{abstractbox}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+\thispagestyle{empty}
+
+\begin{mdframed}[
+    linecolor=teal,
+    linewidth=1.5pt,
+    innertopmargin=0pt,
+    innerbottommargin=0pt,
+    innerleftmargin=4pt,
+    innerrightmargin=6pt,
+    leftline=false,
+    rightline=false,
+  ]
+  \begin{tblr}{
+      colspec = { Q[c, m, wd=2.4cm] Q[c, m, wd = .65\textwidth] Q[c, m, wd=3.15cm] },
+      colsep  = 4pt,
+      rowsep  = 0pt,
+      column{2} = {bg=gray!10},
+    }
+
+    %--- LEFT: ITC Logo ---
+    {
+      \parbox{2.2cm}{%
+        \centering
+        \includegraphics*[width=2.2cm]{Logo/ITC}
+      }
+    }
+    &
+
+    %--- CENTER: Journal Title ---
+    {
+      \centering
+      \vspace*{.2cm}
+
+      {\fontsize{14}{22}\selectfont\textbf{THE $15^{\textbf{TH}}$ SCIENTIFIC DAY OF ITC}}\par
+      \vspace{.4cm}
+      {\fontsize{14}{22}\selectfont Bridging Engineering and Technology with Industry for Cambodia’s Sustainable Growth}
+
+      \vspace*{.2cm}
+    }
+    &
+
+    %--- RIGHT: RIC Logo ---
+    {
+      \parbox{3cm}{%
+        \centering
+        \includegraphics*[width=3cm]{Logo/RIC}
+      }
+    }
+  \end{tblr}
+\end{mdframed}
+
+% ─── Title block ──────────────────────────────────────────────────────────────
+\begin{center}
+  {\fontsize{15}{22}\selectfont\textbf{
+      FINE-TUNING STRATEGIES FOR REASONING IN KHMER \\[5pt]
+  MATHEMATICAL WORD PROBLEMS}}\\[9pt]
+
+  {\fontsize{12}{22}
+    Pov SORN\textsuperscript{\color{superscript}1*},\;
+    Sokkhey PHAUK\textsuperscript{\color{superscript}1},\;
+    Sothea HAS\textsuperscript{\color{superscript}1}\\[8pt]
+  }
+
+  \textit{
+    \textsuperscript{\color{superscript}1}Department of Applied Mathematics and Statistics,
+    Institute of Technology of Cambodia, Russian Federation Blvd.,
+    P.O. Box 86, Phnom Penh, Cambodia\\[.5cm]
+    \textsuperscript{\color{superscript}*}Corresponding author:
+    \textcolor{blue}{\href{mailto:pov_sorn@gsc.itc.edu.kh}{pov\_sorn@gsc.itc.edu.kh}}
+  }\\[1cm]
+\end{center}
+\vspace{5pt}
+
+% ─── Abstract ─────────────────────────────────────────────────────────────────
+\begin{mdframed}[
+    linewidth=0.4pt,
+    linecolor=povteal,
+    backgroundcolor=gray!10,
+    innerleftmargin=5pt,
+    innerrightmargin=7pt,
+    innertopmargin=6pt,
+    innerbottommargin=6pt,
+    skipabove=5pt,
+    skipbelow=5pt,
+    leftline=false,
+    rightline=false,
+  ]
+  \noindent\textbf{Abstract:}
+  \textit{
+    %--------------------------------------------------
+    % Context: General
+    Khmer Mathematical Word Problems (KMWP) present a significant challenge in natural language
+    processing due to the low-resource nature of the Khmer language and the near-complete absence
+    of publicly available benchmark datasets.
+    %-------------------------------------------------
+    % Data: Source, Size, What is it about?
+    In this study, we construct a dataset of $8,000$
+    primary school-level KMWP samples sourced from the official Ministry of Education, Youth and Sport
+    (MOEYS) materials, each paired with step-by-step solution guidance.
+    %-------------------------------------------------
+    %    Methodology:
+    %        - Key algorithm
+    %        - Special Method
+    %        - Objective
+    We fine-tune the
+    Qwen2.5-1.5B large language model using the Low-Rank Adaptation (LoRA) framework.
+    %---------------------------------------------------
+    % Summary of the result
+    The model achieves ROUGE-L score of $0.8809$, a cosine similarity of $0.9631$, and a numerical
+    accuracy of $81.00\%$ on $400$ test samples. These results represent a dramatic improvement over the base model, which attains $0.00\%$ accuracy in zero-shot settings and only $4.50\%$ in one-shot settings.
+    %---------------------------------------------
+    %    Closing:
+    %    - First Work
+    %    - Improve...
+    %    - A remark on our achievement
+    %    - Future: open more direction for future research.
+    This work not only produces a KMWP for future research in NLP, but also demonstrates that targeted fine-tuning with Chain-of-Thought
+    Supervision is an effective strategy for enabling AI models to reason through mathematical
+    word problems in a low-resource language. The study supports the United Nations Sustainable
+    Development Goals of Quality Education (SDG 4), Industry and Innovation (SDG 9), and Reduced
+    Inequalities (SDG 10) by providing an AI-powered learning tool for Khmer-speaking students.
+  }
+\end{mdframed}
+
+\vspace*{-8pt}
+
+\begin{mdframed}[
+    linecolor=povteal,
+    linewidth=.4pt,
+    topline=false,
+    bottomline=true,
+    leftline=false,
+    rightline=false,
+    innertopmargin=6pt,
+    innerbottommargin=6pt,
+    innerleftmargin=6pt,
+    innerrightmargin=6pt,
+  ]
+  \noindent\textbf{Keywords:}
+  Mathematical Word Problems;
+  Chain-of-Thought;
+  Khmer Language;
+  Low-Resource Language;
+  Fine-Tuning
+\end{mdframed}
+
+\end{document}

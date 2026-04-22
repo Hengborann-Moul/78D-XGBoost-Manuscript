@@ -1,0 +1,153 @@
+% !TEX program = xelatex % (can also use "lualatex")
+\documentclass[10pt]{article}
+
+% ─── Packages ────────────────────────────────────────────────────────────────
+\usepackage[a4paper, top=0.75in, bottom=0.75in, left=0.5in, right=0.5in]{geometry}
+\usepackage{amsmath, amssymb}
+\usepackage{graphicx}
+\usepackage{array, booktabs}
+\usepackage[dvipsnames,table]{xcolor}
+\usepackage{mdframed}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{parskip}
+\usepackage{setspace}
+%\usepackage[T1]{fontenc}
+%\usepackage[utf8]{inputenc}
+\usepackage{microtype}
+\usepackage{fancyhdr}
+\usepackage{times}
+\usepackage{multicol}
+\usepackage{enumitem}
+\usepackage{tikz}
+\usepackage{makecell}
+\usepackage{multirow}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{tabularray}
+\everymath{\displaystyle}
+\usepackage{pdfpages}
+\usepackage{cite}
+\usepackage{hyperref}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+\usepackage{algpseudocode}
+
+% ─── Colors ───────────────────────────────────────────────────────────────────
+\definecolor{citecolor}   {RGB}{0, 112, 192}   % #0070C0
+\definecolor{povteal}     {RGB}{0, 145, 147}
+\definecolor{superscript} {RGB}{0, 145, 147}
+
+% ─── Hyperref Setup ───────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks = true,
+  citecolor  = citecolor,
+  linkcolor  = black,
+  urlcolor   = povteal,
+  pdfborder  = {0 0 0},
+  breaklinks = true
+}
+
+% ─── Khmer Text Support (XeLaTeX / LuaLaTeX) ─────────────────────────────────
+\usepackage{fontspec}
+\setmainfont{Times New Roman}
+\newfontfamily\kh[
+  Path = Fonts/,
+  Script = Khmer
+]{KhmerOSsiemreap}
+
+\newfontfamily\kml[
+  Path = Fonts/,
+  Script = Khmer
+]{KhmerOSmuol}
+
+\XeTeXlinebreaklocale "km"
+\XeTeXlinebreakskip = 0pt plus 1pt minus 0pt
+
+% ─── Section / Subsection Formatting ─────────────────────────────────────────
+\titleformat{\section}
+{\normalfont\bfseries\normalsize}
+{\thesection.}{0.5em}{\MakeUppercase}
+
+\titleformat{\subsection}
+{\normalfont\itshape\normalsize}
+{\thesubsection}{0.5em}{}
+
+\titleformat{\subsubsection}
+{\normalfont\itshape\normalsize}
+{\thesubsubsection}{0.5em}{}
+
+\titlespacing*{\section}      {0pt}{7pt}{3pt}
+\titlespacing*{\subsection}   {0pt}{5pt}{2pt}
+\titlespacing*{\subsubsection}{0pt}{4pt}{2pt}
+
+% ─── Caption Formatting ───────────────────────────────────────────────────────
+\captionsetup{
+  font          = small,
+  labelfont     = bf,
+  labelsep      = period,
+  justification = centering
+}
+
+% ─── Abstract Box ─────────────────────────────────────────────────────────────
+\newmdenv[
+  linewidth        = 0.4pt,
+  linecolor        = povteal,
+  backgroundcolor  = gray!10,
+  innerleftmargin  = 7pt,
+  innerrightmargin = 7pt,
+  innertopmargin   = 6pt,
+  innerbottommargin= 6pt,
+  skipabove        = 5pt,
+  skipbelow        = 5pt,
+  leftline         = false,
+  rightline        = false
+]{abstractbox}
+
+% ─── Blank Figure Helper ──────────────────────────────────────────────────────
+\newcommand{\blankfig}[2]{%
+  \fbox{\rule{0pt}{#2}\hspace{#1}}%
+}
+
+% ─── Running Header (page 2+) ─────────────────────────────────────────────────
+% \pagestyle{fancy}
+% \fancyhf{}
+% \renewcommand{\headrulewidth}{0pt}
+% \fancyhead[R]{%
+%   \small\itshape\color{povteal}%
+%   Hengborann et al./Techno-Science Research Journal xxx (2026) xxx-xxx%
+% }
+% \fancyfoot[C]{\small\thepage}
+
+% ─── First Page Style ─────────────────────────────────────────────────────────
+% \fancypagestyle{firstpage}{
+%   \fancyhf{}
+%   \renewcommand{\headrulewidth}{0pt}
+%   \fancyhead[C]{%
+%     \small\itshape\color{povteal}%
+%     Techno-Science Research Journal V:xxx (Y:xxx) P xxx-xxx%
+%   }
+%   \fancyfoot[C]{\small\thepage}
+% }
+
+% ─────────────────────────────────────────────────────────────────────────────
+
+%--------- Algorithm Config ---------%
+\SetKwInput{KwInput}{Input}
+\SetKwInput{KwOutput}{Output}
+\SetKwInput{KwData}{Data}
+\SetKwInput{KwResult}{Result}
+
+\SetKwFunction{FExtract}{ExtractFeatures}
+\SetKwFunction{FProcess}{ProcessVideo}
+\SetKwFunction{FNormalize}{NormalizeFeatures}
+\SetKwFunction{FTransform}{TransformLabels}
+\SetKwFunction{FSplit}{SplitDataset}
+
+\SetKwProg{Fn}{Function}{:}{}
+\SetKwFor{ForEach}{foreach}{do}{endfor}
+
+\begin{document}
