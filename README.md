@@ -61,6 +61,9 @@ tectonic -X compile src/_preamble.tex --outfmt pdf
 
 # Or compile the full document
 tectonic src/index.tex
+
+# Or watch option
+tectonic -X watch
 ```
 
 The compiled PDF will be output to `build/manuscript/manuscript.pdf` (when using `tectonic -X build`) or `main.pdf`.
