@@ -31,10 +31,13 @@
 \usepackage{tabularray}
 \everymath{\displaystyle}
 \usepackage{pdfpages}
-\usepackage{cite}
+\usepackage[nocompress]{cite}
 \usepackage{hyperref}
 \usepackage[ruled,vlined,linesnumbered]{algorithm2e}
 \usepackage{algpseudocode}
+\usepackage{pgfplots}
+\usepackage{pgfplotstable}
+\usepgfplotslibrary{groupplots}
 
 % ─── Colors ───────────────────────────────────────────────────────────────────
 \definecolor{citecolor}   {RGB}{0, 112, 192}   % #0070C0
@@ -134,6 +137,11 @@
 % }
 
 % ─────────────────────────────────────────────────────────────────────────────
+
+% ---------------- Modify Citation Color ------------------%
+% Color all citation brackets and numbers
+\let\oldcite\cite
+\renewcommand{\cite}[1]{\textcolor{citecolor}{\oldcite{#1}}}
 
 %--------- Algorithm Config ---------%
 \SetKwInput{KwInput}{Input}

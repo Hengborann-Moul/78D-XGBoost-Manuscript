@@ -61,8 +61,8 @@
 
   {\fontsize{12}{22}
     Hengborann MOUL\textsuperscript{\color{superscript}\hyperlink{aff1}{\color{superscript} 1*}},\;
-    Dr. Sothea HAS\textsuperscript{\color{superscript}\hyperlink{aff2}{\color{superscript} 2}},\;
-    Dr. Sokkhey PHAUK\textsuperscript{\color{superscript}\hyperlink{aff2}{\color{superscript} 2}}\\[6pt]
+    Sothea HAS\textsuperscript{\color{superscript}\hyperlink{aff2}{\color{superscript} 2}},\;
+    Sokkhey PHAUK\textsuperscript{\color{superscript}\hyperlink{aff2}{\color{superscript} 2}}\\[6pt]
   }
 
   \textit{
@@ -144,9 +144,8 @@
 
   To close this gap, we introduce a lightweight framework that extracts a compact 78-dimensional feature vector, capturing facial landmarks, head-pose orientation, eye-gaze direction, and facial-action-unit intensities, from each video frame and feeds it directly into an XGBoost classifier~\cite{Chen2016XGBoostAS}. The model operates entirely on CPU, delivers per-frame predictions across four affective states (boredom, engagement, confusion, frustration) at three ordinal levels (Low, Medium, High), and surfaces feature-importance scores that reveal exactly which facial cues drive each classification.
 
-  Our objective is straightforward yet ambitious: demonstrate that principled feature engineering combined with gradient boosting can achieve competitive performance on the DAiSEE benchmark while remaining fully explainable and deployable at scale. The resulting system attains 65.26\% mean accuracy and 59.62\% weighted F1-score, with frustration detection reaching 80.25\% per-class accuracy, results that rival far more resource-intensive deep-learning baselines yet run without specialized hardware and offer educators human-interpretable insights~\cite{Das2025OptimizingSE}.
-
-  This work matters because it equips teachers with a practical, data-driven window into student attention that fits existing classroom infrastructure. By making disengagement visible again and explainable, we enable timely instructional adjustments that can improve learning outcomes at population scale~\cite{Khosravi2022ExplainableAI}.
+  Our objective is straightforward yet ambitious: demonstrate that principled feature engineering combined with gradient boosting can achieve competitive performance on the DAiSEE benchmark while remaining fully explainable and deployable at scale. %The resulting system attains 65.26\% mean accuracy and 59.62\% weighted F1-score, with frustration detection reaching 80.25\% per-class accuracy, results that rival far more resource-intensive deep-learning baselines yet run without specialized hardware and offer educators human-interpretable insights~\cite{Das2025OptimizingSE}.
+  This work aims at equiping teachers with a practical, data-driven window into student attention that fits existing classroom infrastructure. By making disengagement visible again and explainable, we enable timely instructional adjustments that can improve learning outcomes at population scale~\cite{Khosravi2022ExplainableAI}.
 
   % ------------ End Introduction ----------- %
 
@@ -171,9 +170,36 @@
   % ─────────────────────────────────────────────────────────────────────────────
   \section{Methodology}
   \subsection{Dataset}
-  \subsubsection{DAiSEE Dataset}
+  \subsubsection{DAiSEE}
 
-  This study employs the DAiSEE (Dataset for Affective States in E-Environments) dataset, a large-scale benchmark for affective state recognition in online learning contexts\cite{Gupta2016DAiSEETU}. The dataset comprises video recordings of students engaged with online educational content. The DAiSEE dataset provides annotations for four distinct affective states: boredom, engagement, confusion, and frustration. Each affective state is annotated using a four-level ordinal scale (Very Low = 0, Low = 1, High = 2, Very High = 3) based on crowd-sourced annotations from multiple raters.
+  This study employs the DAiSEE (Dataset for Affective States in E-Environments) dataset, a large-scale benchmark for affective state recognition in online learning contexts\cite{Gupta2016DAiSEETU}. The dataset comprises video recordings of students engaged with online educational content. The DAiSEE dataset provides annotations for four distinct affective states: boredom, engagement, confusion, and frustration. Each affective state is annotated using a four-level ordinal scale (Very Low = 0, Low = 1, High = 2, Very High = 3) based on crowd-sourced annotations from multiple raters as illustrated in Table~\ref{tab_daisee_labels} below.
+
+  %Figure~\ref{fig:daisee_participants} shows representative frames from the DAiSEE dataset, illustrating the naturalistic, in-the-wild recording conditions and the diversity of participants.
+
+  \vspace{-1cm}
+  \begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{image/bored0-3.png}
+    \end{subfigure}
+    \begin{subfigure}[b]{\columnwidth}
+      \centering
+      \includegraphics[width=\columnwidth]{image/engaged0-3.png}
+    \end{subfigure}
+    % \begin{subfigure}[b]{\columnwidth}
+    %   \centering
+    %   \includegraphics[width=\columnwidth]{image/conf0-3.png}
+    % \end{subfigure}
+    % \begin{subfigure}[b]{\columnwidth}
+    %   \centering
+    %   \includegraphics[width=\columnwidth]{image/frus0-3.png}
+    % \end{subfigure}
+    \caption{Sample participant frames from the DAiSEE dataset, showing naturalistic expressions of affective states during online learning sessions. Images are captured under varied lighting conditions, camera angles, and personal environments typical of in-the-wild educational settings.}
+    \label{fig:daisee_participants}
+  \end{figure}
+  \vspace{-1cm}
+  The dataset contains video clips of varying durations, captured at 30 frames per second, with participants from diverse demographic backgrounds. The videos capture naturalistic student behavior during online learning sessions, providing authentic expressions of affective states. The original dataset is organized into training, validation, and test splits, with label files containing the ground truth annotations for each video clip.
 
   \begin{table}[H]
     \caption{\footnotesize{Distribution of labels in DAiSEE across its affective states}}
@@ -189,8 +215,6 @@
     \end{tabular}
   \end{table}
 
-  The dataset contains video clips of varying durations, captured at 30 frames per second, with participants from diverse demographic backgrounds. The videos capture naturalistic student behavior during online learning sessions, providing authentic expressions of affective states. The original dataset is organized into training, validation, and test splits, with label files containing the ground truth annotations for each video clip.
-
   % The distribution of labels after removing bad annotators is depicted in Table~\ref{tab_daisee_labels}
 
   \subsubsection{Label Transformation}
@@ -200,9 +224,9 @@
   To address these challenges while maintaining clinically meaningful distinctions, we collapse the four-level labels into a three-level classification scheme. The transformation strategy is state-specific and informed by the psychological characteristics of each affective construct:
 
   \begin{itemize}[leftmargin=*]
-    \item \textbf{Boredom, Confusion, and Frustration:} These states follow a similar remapping where levels 0 (Very Low), 1 (Low), and 2 (High) remain unchanged, while level 3 (Very High) is merged into level 2. This consolidation is justified by the observation that extreme manifestations of these negative affective states are rare in educational contexts, and the distinction between ``High'' and ``Very High'' levels provides limited additional discriminative value for automated recognition systems.
+    \item \textbf{Boredom, Confusion, and Frustration:} These states follow a similar remapping where levels 0, 1, and 2 remain unchanged, while level 3 is merged into level 2. This consolidation is justified by the observation that extreme manifestations of these negative affective states are rare in educational contexts, and the distinction between ``High'' and ``Very High'' levels provides limited additional discriminative value for automated recognition systems.
 
-    \item \textbf{Engagement:} Following a distinct remapping strategy, levels 0 (Very Low) and 1 (Low) are merged into a single ``Low'' category (mapped to 0), level 2 (High) is mapped to 1, and level 3 (Very High) is mapped to 2. This transformation reflects the practical reality that distinguishing between minimal and moderate disengagement is less critical than identifying high engagement states, which are of primary pedagogical interest.
+    \item \textbf{Engagement:} Following a distinct remapping strategy, levels 0 and 1 are merged into a single ``Low'' category (mapped to 0), level 2 is mapped to 1, and level 3 is mapped to 2. This transformation reflects the practical reality that distinguishing between minimal and moderate disengagement is less critical than identifying high engagement states, which are of primary pedagogical interest.
   \end{itemize}
 
   Mathematically, the label transformation functions are defined as:
@@ -228,10 +252,10 @@
 
   \noindent where $y_s$ represents the original four-level label and $y'_s$ denotes the transformed three-level label for affective state $s$.
 
-  \subsection{Data Preprocessing}
+  \subsection{Data Preprocessing: MediaPipe Feature Extraction}
   % The entire process start with the preprocessing of DAiSEE datasets. Each video of DAiSEE was chunk and extracted facial features from each frame. Following in this section, we will describe what are the features were extracted and the algorithm behind it.
 
-  \subsubsection{MediaPipe Feature Extraction}
+  % \subsubsection{MediaPipe Feature Extraction}
 
   Facial features are extracted from video frames using the MediaPipe Face Landmarker framework, which provides both facial landmark detection and blendshape coefficient estimation. The extraction pipeline processes video frames at 15 frames per second (achieved by skipping every other frame from the original 30 fps recordings) to balance computational efficiency with temporal resolution.
 
@@ -335,7 +359,7 @@
   \begin{equation}
     L(\emptyset) = \sum_{i=1}^{n} l\big(y_i, \hat{y}_i(t)\big) + \sum_{k=1}^{t} \sigma(f_k)
   \end{equation}}
-  \noindent\textit{\textbf{Where:}}
+  \noindent{Where:}
   \begin{itemize}
     \item{$L(\emptyset)$ The loss function that needs to be minimized.}
     \item{$y_i$ The target variable's actual value at time $i$.}
@@ -502,7 +526,167 @@
   \end{tabular}
   \end{table}
 
-  The XGBoost model achieves a mean accuracy of 63.40\% across the four affective states, with substantial variation between states. \textbf{Frustration detection} achieves the highest accuracy (80.25\%), driven by distinctive facial expressions---furrowed brows (browDownLeft/Right), compressed lips (mouthPressLeft/Right), and raised cheeks---that are effectively captured by MediaPipe blendshape features. The model exhibits strong precision for the majority ``Low'' frustration class (0.791) with near-perfect recall (0.994), though it struggles with the minority ``Medium'' (P=0.250, R=0.013) and ``High'' (P=0.000, R=0.000) classes, which together comprise only 21\% of the test set.
+  \vspace{-0.5cm}
+
+  Figure~\ref{fig:confusion-matrices} breaks these aggregates down into per-class recall patterns. The diagonal entries show the proportion of each true class that the model correctly identifies. %These per-class patterns reveal a consistent trade-off. The model achieves respectable accuracy when the majority class is large and visually distinctive as in frustration, where facial tension produces reliable cues, but fails when classes are rare or expressions are subtle. This motivates the broader comparison against existing methods to gauge whether the observed limitations are specific to this pipeline or endemic to the dataset itself.
+
+  \begin{figure*}
+  \centering
+  \begin{tikzpicture}
+    \begin{groupplot}[
+        group style={group size=4 by 1, horizontal sep=0.45cm},
+        width=0.19\textwidth,
+        height=0.19\textwidth,
+        scale only axis,
+        axis on top,
+        enlargelimits=false,
+        axis line style={draw=none},
+        tick style={draw=none},
+        xmin=-0.5, xmax=2.5,
+        ymin=-0.5, ymax=2.5,
+        y dir=reverse,
+        xtick={0,1,2},
+        xticklabels={Low, Medium, High},
+        ytick={0,1,2},
+        yticklabels={Low, Medium, High},
+        xlabel={Predicted},
+        tick label style={font=\scriptsize},
+        xlabel style={font=\scriptsize},
+        ylabel style={font=\scriptsize},
+        title style={font=\small, yshift=-2pt},
+        point meta min=0,
+        point meta max=1,
+        colormap={customblues}{
+          color(0cm)=(white);
+          color(1cm)=(blue!15);
+          color(2cm)=(blue!35);
+          color(3cm)=(blue!55);
+          color(4cm)=(blue!75);
+          color(5cm)=(blue!95)
+        },
+        nodes near coords,
+        every node near coord/.append style={font=\scriptsize, anchor=center},
+      ]
+
+      \nextgroupplot[title={Boredom}, ylabel={True},]
+      \addplot [
+        matrix plot*,
+        mesh/cols=3,
+        point meta=explicit,
+        shader=flat corner,
+        draw=none,
+        nodes near coords={\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}},
+      ] table [meta=C] {
+        x y C
+        0 0 0.63
+        1 0 0.27
+        2 0 0.10
+        0 1 0.41
+        1 1 0.37
+        2 1 0.22
+        0 2 0.26
+        1 2 0.29
+        2 2 0.45
+      };
+
+      \nextgroupplot[title={Engagement}, yticklabels={,,}]
+      \addplot [
+        matrix plot*,
+        mesh/cols=3,
+        point meta=explicit,
+        shader=flat corner,
+        draw=none,
+        nodes near coords={\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}},
+      ] table [meta=C] {
+        x y C
+        0 0 0.11
+        1 0 0.76
+        2 0 0.12
+        0 1 0.01
+        1 1 0.65
+        2 1 0.33
+        0 2 0.01
+        1 2 0.46
+        2 2 0.53
+      };
+
+      \nextgroupplot[ title={Confusion}, yticklabels={,,} ]
+      \addplot [
+        matrix plot*,
+        mesh/cols=3,
+        point meta=explicit,
+        shader=flat corner,
+        draw=none,
+        nodes near coords={%
+            \ifnum\coordindex=0
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else\ifnum\coordindex=3
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else\ifnum\coordindex=6
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else
+            \pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}%
+            \fi\fi\fi
+        },
+      ] table [meta=C] {
+        x y C
+        0 0 0.92
+        1 0 0.07
+        2 0 0.01
+        0 1 0.84
+        1 1 0.13
+        2 1 0.03
+        0 2 0.80
+        1 2 0.14
+        2 2 0.06
+      };
+
+      \nextgroupplot[title={Frustration}, yticklabels={,,}]
+      \addplot [
+        matrix plot*,
+        mesh/cols=3,
+        point meta=explicit,
+        shader=flat corner,
+        draw=none,
+        nodes near coords={%
+            \ifnum\coordindex=0
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else\ifnum\coordindex=3
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else\ifnum\coordindex=6
+            \textcolor{white}{\pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}}%
+            \else
+            \pgfmathprintnumber[fixed,fixed zerofill,precision=2]{\pgfplotspointmeta}%
+            \fi\fi\fi
+        },
+      ] table [meta=C] {
+        x y C
+        0 0 0.97
+        1 0 0.03
+        2 0 0.00
+        0 1 0.95
+        1 1 0.04
+        2 1 0.01
+        0 2 0.89
+        1 2 0.05
+        2 2 0.05
+      };
+
+    \end{groupplot}
+  \end{tikzpicture}
+  \caption{Confusion matrices for XGBoost model predictions across four affective states on the test set.}
+  %Rows correspond to true labels and columns to predicted labels. Diagonal values indicate per-class recall.}
+  \label{fig:confusion-matrices}
+  \end{figure*}
+
+  \begin{comment}
+  \textbf{Boredom} shows the most balanced confusion matrix, yet remains the weakest state overall. The model recalls only 63\% of true Low boredom samples, with the remainder split between Medium (27\%) and High (10\%). True Medium and High boredom are even more entangled: Medium samples are misclassified as Low 41\% of the time, while High samples are correctly recalled at just 45\% with 29\% drifting to Medium. This pattern confirms that boredom lacks distinctive facial activations; its signature is often the absence of strong expression, making it easy to confuse with neutral or low-intensity states.
+
+  \textbf{Engagement} presents a different failure mode. The model almost entirely misses the Low engagement minority class, recalling only 11\% of true Low samples while misclassifying 76\% of them as Medium. True Medium engagement fares better at 65\% recall, and High engagement reaches 53\%. The near-total collapse on Low engagement---despite focal loss and calibration---suggests that the facial cues distinguishing low engagement from medium engagement are subtle and underrepresented in the training data.
+
+  \textbf{Confusion} and \textbf{Frustration} both suffer from severe majority-class bias, though to different degrees. For confusion, the model correctly recalls 92\% of true Low samples but only 13\% of Medium and 6\% of High, with the vast majority of minority-class instances collapsing into the Low bucket. Frustration shows the same trend in its most extreme form: 97\% recall for Low, 4\% for Medium, and 5\% for High. The near-diagonal dominance in the first column of both matrices reveals that the classifier has learned a safe but uninformative strategy: predict Low unless the evidence is overwhelming. This behavior is consistent with the DAiSEE label distribution, where Low-intensity annotations dominate all four states.
+
+  \end{comment}
 
   \begin{comment}
   \textbf{Confusion detection} attains 67.69\% accuracy, the second highest among the four states. Similar to frustration, the model demonstrates excellent recall for the majority ``Low'' confusion class (0.990) but fails to identify any ``High'' confusion instances (0.00 precision and recall) and shows very low recall for the ``Medium'' class (0.025). This pattern suggests that the gradient boosting decision boundaries are strongly biased toward the dominant ``Low'' class, a known limitation when severe imbalance persists despite focal loss weighting and SMOTE-based resampling.
@@ -550,11 +734,11 @@
 
   \begin{table}[H]
   \centering
-  \caption{Accuracy comparison with existing approaches on the DAiSEE dataset. Results for prior methods are engagement-only (single-task), whereas our XGBoost model performs multi-task classification across four affective states.}
+  \caption{Accuracy comparison with existing approaches on the DAiSEE dataset. Results for prior methods are engagement-only (single-task), whereas our XGBoost model performs multi-task classification across four affective states\cite{Gothwal2025ViBEDNetVB}.}
   \label{tab:daisee-sota}
   \begin{tabular}{>{\small}l>{\small}c}
   \toprule
-  \textbf{Model \cite{Gothwal2025ViBEDNetVB}} & \textbf{Accuracy (\%)} \\
+  \textbf{Model} & \textbf{Accuracy (\%)} \\
   \midrule
   CNN-RNN Baseline (DAiSEE) & 53.90 \\
   I3D (Inflated 3D ConvNet) & 52.35 \\
@@ -572,7 +756,7 @@
   \bottomrule
   \end{tabular}
   \end{table}
-
+  \vspace{-0.5cm}
   While the XGBoost model does not surpass the state-of-the-art ViBED-Net (LSTM) engagement accuracy of 73.43\%, it achieves a competitive mean multi-task accuracy of 65.26\%, which exceeds several established deep learning baselines including the CNN-RNN baseline (53.90\%), I3D (52.35\%), and the ViBED-Net Transformer variant (62.39\%). Notably, the ResNet + TCN Hybrid (63.90\%) and VisioPhysioENet (63.09\%) achieve engagement-only accuracies comparable to our mean multi-task performance, underscoring that gradient boosting on carefully engineered features can approach the performance of deep spatiotemporal architectures at a fraction of the computational cost.
 
   The XGBoost pipeline's real advantage is not accuracy. It is the ability to run \textbf{anywhere, on anything}. The full inference path, from MediaPipe feature extraction through to final classification, requires no GPU. On a standard consumer CPU, predtictions arrive in milliseconds per video sequence, and the saved model occupies only a few megabytes. Compare that to ViBED-Net, which stacks dual EfficientNetV2 backbones carrying millions of parameters, adds LSTM or Transformer temporal modules on top, and still needs GPU acceleration to hit real-time throughput. For schools and institutions without dedicated GPU infrastructure, that hardware dependency is a non-starter. The XGBoost approach trades some ceiling performance for something more valuable in practice: the ability to actually deploy.
@@ -801,6 +985,7 @@
 
   % Figure~\ref{fig:confusion-matrices} presents confusion matrices analyzing per-class classification behavior.
 
+  \begin{comment}
   \begin{figure*}[t]
     \centering
     \begin{subfigure}[b]{0.24\textwidth}
@@ -831,8 +1016,9 @@
       \label{subfig:frustration-cm}
     \end{subfigure}
     \caption{Confusion matrices for XGBoost model predictions across four affective states on the test set.}
-    \label{fig:confusion-matrices}
+    \label{fig:confusion-matrices-old}
   \end{figure*}
+  \end{comment}
 
   \begin{comment}
 
